@@ -1,0 +1,15 @@
+.minimap {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 150;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.minimap-canvas {
+  display: block;
+}

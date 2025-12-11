@@ -1,0 +1,14 @@
+{
+  "name": "noris2026",
+  "version": "1.0.0",
+  "description": "Professional 3D F1 Racing Game",
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd client && npm install"
+  },
+  "keywords": ["f1", "racing", "3d", "game"],
+  "author": "",
+  "license": "MIT"
+}
+

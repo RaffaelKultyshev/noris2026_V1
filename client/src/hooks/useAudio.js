@@ -142,7 +142,6 @@ export function useAudio() {
       })
     }).catch(() => {})
     // #endregion
-    }
     if (musicEnabled && !backgroundMusicRef.current.playing()) {
       try {
         backgroundMusicRef.current.play()

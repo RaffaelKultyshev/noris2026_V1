@@ -34,11 +34,10 @@ yarn-error.log*
 *.tmp
 .cache/
 
-# Large map files (too big for GitHub, keep locally)
+# Large source files (not used in game, keep locally)
 Map/
 F1_car/
 Music/
-client/public/models/map_circuit.glb
-client/public/models/*.glb
-!client/public/models/f1_car.glb
+
+# Note: GLB files in client/public/models/ are tracked with Git LFS
 

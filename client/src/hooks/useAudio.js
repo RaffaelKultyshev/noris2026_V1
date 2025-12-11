@@ -122,6 +122,27 @@ export function useAudio() {
         }
       })
     }
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/223b6629-4162-42ae-bf88-ac9429aebf70', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: 'debug-session',
+        runId: 'run_music_lap',
+        hypothesisId: 'H1',
+        location: 'useAudio.js:playEngineSound',
+        message: 'music_play_attempt',
+        data: {
+          musicEnabled,
+          hasMusic: !!backgroundMusicRef.current,
+          isPlaying: backgroundMusicRef.current ? backgroundMusicRef.current.playing() : false,
+          volume: volume
+        },
+        timestamp: Date.now()
+      })
+    }).catch(() => {})
+    // #endregion
+    }
     if (musicEnabled && !backgroundMusicRef.current.playing()) {
       try {
         backgroundMusicRef.current.play()

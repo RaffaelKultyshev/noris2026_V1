@@ -132,6 +132,21 @@ export function useGameControls() {
         if (distFromStart > CHECKPOINT_DETECTION_RADIUS * 2) {
           hasLeftStartArea.current = true
           console.log('Left start area - checkpoints now active')
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/223b6629-4162-42ae-bf88-ac9429aebf70', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: 'debug-session',
+              runId: 'run_music_lap',
+              hypothesisId: 'H2',
+              location: 'useGameControls.js:leftStartArea',
+              message: 'left_start_area',
+              data: { distFromStart, speed, position: newPosition },
+              timestamp: Date.now()
+            })
+          }).catch(() => {})
+          // #endregion
         }
         return
       }
@@ -139,6 +154,27 @@ export function useGameControls() {
       // Check if we've reached the current checkpoint
       if (distToCheckpoint <= CHECKPOINT_DETECTION_RADIUS) {
         lastCheckpointTime.current = now
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/223b6629-4162-42ae-bf88-ac9429aebf70', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: 'debug-session',
+            runId: 'run_music_lap',
+            hypothesisId: 'H2',
+            location: 'useGameControls.js:checkpointHit',
+            message: 'checkpoint_hit',
+            data: {
+              checkpoint: nextCheckpointIndex.current,
+              distToCheckpoint,
+              pos: newPosition,
+              speed,
+              distFromSpawn
+            },
+            timestamp: Date.now()
+          })
+        }).catch(() => {})
+        // #endregion
         
         // Special handling for start/finish line (checkpoint 0)
         if (nextCheckpointIndex.current === 0) {
@@ -156,6 +192,27 @@ export function useGameControls() {
             }
             
             console.log(`Lap ${currentLap} completed! Time: ${completedLapTime.toFixed(2)}s`)
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/223b6629-4162-42ae-bf88-ac9429aebf70', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                sessionId: 'debug-session',
+                runId: 'run_music_lap',
+                hypothesisId: 'H2',
+                location: 'useGameControls.js:lapComplete',
+                message: 'lap_completed',
+                data: {
+                  lap: currentLap,
+                  completedLapTime,
+                  bestLapTime,
+                  pos: newPosition,
+                  speed
+                },
+                timestamp: Date.now()
+              })
+            }).catch(() => {})
+            // #endregion
             
             // Check if race is finished (after completing lap 2)
             if (currentLap >= 2) {

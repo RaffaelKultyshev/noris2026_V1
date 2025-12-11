@@ -21,7 +21,7 @@ export default function GameUI({ controls }) {
       {/* Top Bar - Lap info only */}
       <div className="top-bar">
         <div className="lap-counter">
-          LAP {Math.min(controls.currentLap, 2)}/2
+          LAP {controls.currentLap}/2
         </div>
       </div>
 
@@ -71,11 +71,12 @@ export default function GameUI({ controls }) {
       )}
 
       {/* Race Finished */}
-      {controls.currentLap > 2 && (
+      {controls.raceFinished && (
         <div className="race-finished">
           <h1>🏁 RACE FINISHED!</h1>
           <p>Total Time: {formatTime(controls.raceTime)}</p>
           {controls.bestLapTime && <p>Best Lap: {formatTime(controls.bestLapTime)}</p>}
+          {controls.lastLapTime && <p>Last Lap: {formatTime(controls.lastLapTime)}</p>}
           <p className="return-hint">Returning to menu...</p>
         </div>
       )}

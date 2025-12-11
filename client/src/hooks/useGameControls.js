@@ -28,6 +28,7 @@ export function useGameControls() {
   const [rotation, setRotation] = useState(0)
   const [currentLap, setCurrentLap] = useState(1)
   const [raceStarted, setRaceStarted] = useState(false)
+  const [raceFinished, setRaceFinished] = useState(false)
   const [countdown, setCountdown] = useState(null)
   const [raceTime, setRaceTime] = useState(0)
   const [lapTime, setLapTime] = useState(0)
@@ -107,8 +108,8 @@ export function useGameControls() {
       Math.pow(newPosition[2] - SPAWN_Z, 2)
     )
     
-    // Checkpoint-based lap detection - only check when race started, car is moving, and away from spawn
-    if (raceStarted && newPosition && Math.abs(speed) > 1 && distFromSpawn > 5) {
+    // Checkpoint-based lap detection - only check when race started, not finished, car is moving, and away from spawn
+    if (raceStarted && !raceFinished && newPosition && Math.abs(speed) > 1 && distFromSpawn > 5) {
       const now = Date.now()
       
       // Prevent rapid checkpoint triggers (cooldown)
@@ -156,20 +157,20 @@ export function useGameControls() {
             
             console.log(`Lap ${currentLap} completed! Time: ${completedLapTime.toFixed(2)}s`)
             
-            // Start new lap timer
-            lapStartTime.current = Date.now()
-            
-            setCurrentLap((prev) => {
-              if (prev >= 2) {
-                // Race finished after 2 laps
-                console.log('Race finished!')
-                setTimeout(() => {
-                  useGameStore.getState().setGameState('menu')
-                }, 5000)
-                return prev + 1
-              }
-              return prev + 1
-            })
+            // Check if race is finished (after completing lap 2)
+            if (currentLap >= 2) {
+              // Race finished after 2 laps
+              console.log('Race finished!')
+              setRaceFinished(true)
+              // Show finish screen, return to menu after delay
+              setTimeout(() => {
+                useGameStore.getState().setGameState('menu')
+              }, 5000)
+            } else {
+              // Start new lap timer for next lap
+              lapStartTime.current = Date.now()
+              setCurrentLap((prev) => prev + 1)
+            }
             
             // Reset for next lap - start at checkpoint 1 again
             nextCheckpointIndex.current = 1
@@ -182,7 +183,7 @@ export function useGameControls() {
         }
       }
     }
-  }, [raceStarted, speed, currentLap, bestLapTime])
+  }, [raceStarted, raceFinished, speed, currentLap, bestLapTime])
 
   const updateRotation = useCallback((newRotation) => {
     setRotation(newRotation)
@@ -195,6 +196,7 @@ export function useGameControls() {
     rotation,
     currentLap,
     raceStarted,
+    raceFinished,
     countdown,
     raceTime,
     lapTime,

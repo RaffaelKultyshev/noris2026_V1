@@ -37,6 +37,15 @@ npm run dev
 
 The game will open at `http://localhost:3000`
 
+### Note on Large Files
+
+Large 3D model files (`.glb` files over 100MB) are not included in the repository due to GitHub's file size limits. These files should be kept locally in:
+- `client/public/models/` - For game models
+- `Map/` - For track maps
+- `F1_car/` - For car models
+
+The game will work with the files that are already present locally. For deployment, ensure these files are included in your deployment process.
+
 ## Project Structure
 
 ```
